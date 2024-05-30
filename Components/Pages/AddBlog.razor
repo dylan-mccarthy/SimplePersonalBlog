@@ -1,0 +1,42 @@
+@page "/blogs/add"
+@using SimplePersonalBlog.Data
+@inject IBlogService BlogService
+
+<PageTitle>Add Blog Post</PageTitle>
+
+<h1>Add Blog Post</h1>
+
+<EditForm FormName="Hello" Model="blogPost" OnSubmit="Submit">
+    <label for="Title">Title</label>
+    <InputText @bind-Value="blogPost.Title"/>
+    <p></p>
+    <label for="Content">Content</label>
+    <InputTextArea @bind-Value="blogPost.Content" />
+    <p></p>
+    <button type="submit">Submit</button>
+</EditForm>
+
+@if (submitted)
+{
+    <p>Blog post submitted successfully!</p>
+}
+
+@code {
+    bool submitted = false;
+
+    [SupplyParameterFromForm]
+    public BlogPost blogPost { get; set; } = new();
+
+    private async Task Submit()
+    {
+        if(blogPost.Title != null)
+        {
+            await BlogService.CreatePostAsync(blogPost);
+            submitted = true;
+        }
+    }
+    protected override void OnInitialized()
+    {
+    }
+
+}

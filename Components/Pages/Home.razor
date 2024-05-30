@@ -1,0 +1,30 @@
+﻿@page "/"
+@using SimplePersonalBlog.Data
+@inject IBlogService BlogService
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new Fluent Blazor app.
+
+<h2>Recent Blog Posts</h2>
+
+@foreach (var post in blogPosts)
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@post.Title</h5>
+            <p class="card-text">@post.Content</p>
+        </div>
+    </div>
+}
+
+@code {
+    private List<BlogPost> blogPosts = new List<BlogPost>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        blogPosts = await BlogService.GetPostsAsync();
+    }
+}
