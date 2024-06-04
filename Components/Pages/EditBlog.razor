@@ -1,0 +1,51 @@
+@page "/blogs/edit/{blogId}"
+@using SimplePersonalBlog.Data
+@inject IBlogService BlogService
+@rendermode InteractiveServer
+
+<PageTitle>Edit Blog Post</PageTitle>
+
+<h1>Edit Blog Post</h1>
+
+<EditForm FormName="Hello" Model="blogPost" OnSubmit="Submit">
+    <label for="Title">Title</label>
+    <InputText @bind-Value="blogPost.Title"/>
+
+    <p></p>
+    <label for="Content">Content</label>
+    <InputTextArea @bind-Value="blogPost.Content" />
+    <p></p>
+    <button type="submit">Submit</button>
+</EditForm>
+
+@if (submitted)
+{
+    <p>Blog post submitted successfully!</p>
+}
+
+@code {
+    bool submitted = false;
+
+    [Parameter]
+    public string? blogId { get; set; }
+
+    private int id;
+
+    [SupplyParameterFromForm]
+    public BlogPost blogPost { get; set; } = new();
+
+    private async Task Submit()
+    {
+        if(blogPost.Title != null)
+        {
+            await BlogService.UpdatePostAsync(id, blogPost);
+            submitted = true;
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        id = int.Parse(blogId);
+        blogPost = await BlogService.GetPostAsync(id);
+    }
+
+}

@@ -1,0 +1,23 @@
+@page "/blogs/{blogId}"
+@using SimplePersonalBlog.Data
+@inject IBlogService BlogService
+@rendermode InteractiveServer
+
+<PageTitle>@blogPost.Title</PageTitle>
+
+<h1>@blogPost.Title</h1>
+
+<p>@blogPost.Content</p>
+
+@code {
+    [Parameter]
+    public string? blogId { get; set; }
+    private int id;
+    private BlogPost blogPost = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        id = int.Parse(blogId);
+        blogPost = await BlogService.GetPostAsync(id);
+    }
+}

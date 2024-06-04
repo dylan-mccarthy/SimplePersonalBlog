@@ -1,0 +1,46 @@
+@page "/markdown"
+@using Markdig
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.FluentUI.AspNetCore.Components;
+@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<div id="markdown-content">
+@htmlText
+</div>
+
+@code {
+    private string markdownText = "# Hello, world!\n\nThis is a simple markdown text.";
+    private MarkupString htmlText;
+
+    private IJSObjectReference _jsModule = default!;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            htmlText = ConvertToMarkupString(markdownText);
+            StateHasChanged();
+        }
+    }
+
+    private static MarkupString ConvertToMarkupString(string? value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            var builder = new MarkdownPipelineBuilder()
+                    .UseAdvancedExtensions();
+
+            var pipeline = builder.Build();
+
+            // Convert markdown string to HTML
+            var html = Markdown.ToHtml(value, pipeline);
+
+            // Return sanitized HTML as a MarkupString that Blazor can render
+            return new MarkupString(html);
+        }
+
+        return new MarkupString();
+    }
+}

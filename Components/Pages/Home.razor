@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using SimplePersonalBlog.Data
+@using SimplePersonalBlog.Components.Display
 @inject IBlogService BlogService
 
 <PageTitle>Home</PageTitle>
@@ -12,12 +13,7 @@ Welcome to your new Fluent Blazor app.
 
 @foreach (var post in blogPosts)
 {
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">@post.Title</h5>
-            <p class="card-text">@post.Content</p>
-        </div>
-    </div>
+    <BlogCard BlogPost="post" />
 }
 
 @code {

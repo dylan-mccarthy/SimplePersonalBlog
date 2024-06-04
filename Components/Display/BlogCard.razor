@@ -1,0 +1,51 @@
+@using SimplePersonalBlog.Data
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+@if(BlogPost != null)
+{
+    <FluentCard Height="200px">
+        <div>
+            <FluentLabel Typo="Typography.PaneHeader" @onclick="LoadBlogPage" Style="cursor: pointer;">@BlogPost.Title</FluentLabel>
+            <FluentButton class="btn btn-primary" @onclick="EditPost">
+                <i class="fas fa-edit"></i>
+            </FluentButton>
+            <FluentButton class="btn btn-danger" @onclick="DeletePost">
+                <i class="fas fa-trash"></i>
+            </FluentButton>
+        </div>
+        <FluentDivider Style="width: 100%; padding: 5px" Role="DividerRole.Presentation"></FluentDivider>
+        <p class="card-text">@BlogPost.Content</p>
+    </FluentCard>
+}
+
+@code {
+    [Parameter]
+    [Required]
+    public BlogPost? BlogPost { get; set; }
+
+    public void EditPost()
+    {
+        if(BlogPost != null)
+        {
+            NavigationManager.NavigateTo($"/blogs/edit/{BlogPost.Id}");
+        }
+    }
+
+    public void DeletePost(MouseEventArgs e)
+    {
+        if(BlogPost != null)
+        {
+            NavigationManager.NavigateTo($"/blogs/delete/{BlogPost.Id}");
+        }
+    }
+
+    public void LoadBlogPage()
+    {
+        if(BlogPost != null)
+        {
+            NavigationManager.NavigateTo($"/blogs/{BlogPost.Id}");
+        }
+    }
+}

@@ -1,0 +1,37 @@
+@page "/blogs/delete/{blogId}"
+@using SimplePersonalBlog.Data
+@inject IBlogService BlogService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Delete Blog Post</PageTitle>
+
+<h1>Delete Blog Post</h1>
+
+<form>
+    <button type="submit" @onclick="Delete">Delete</button>
+</form>
+
+@if (deleted)
+{
+    <p>Blog post deleted successfully!</p>
+}
+
+@code {
+    bool deleted = false;
+
+    [Parameter]
+    public string? blogId { get; set; }
+    private int id;
+
+    private async Task Delete()
+    {
+        await BlogService.DeletePostAsync(id);
+        NavigationManager.NavigateTo("/", true);
+    }
+
+    protected override void OnInitialized()
+    {
+        id = int.Parse(blogId);
+    }
+}
